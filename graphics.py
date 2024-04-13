@@ -1,3 +1,4 @@
+#graphics.py
 import os
 import time
 
@@ -124,16 +125,16 @@ class GraphWin(tk.Canvas):
     def getMouse(self):
         try:
             if self.isClosed():
-                return None  # Return None if the window is closed
+                return None
 
-            self.update()  # Flush any prior clicks
+            self.update()
             self.mouseX = None
             self.mouseY = None
             while self.mouseX is None or self.mouseY is None:
                 if self.isClosed():
-                    return None  # Return None if the window is closed
+                    return None
                 self.update()
-                time.sleep(0.1)  # Give up thread
+                time.sleep(0.1)
             x, y = self.toWorld(self.mouseX, self.mouseY)
             self.mouseX = None
             self.mouseY = None
@@ -225,7 +226,6 @@ class Transform:
         self.yscale = yspan / float(h - 1)
 
     def screen(self, x, y):
-        # Returns x,y in screen (actually window) coordinates
         xs = (x - self.xbase) / self.xscale
         ys = (self.ybase - y) / self.yscale
         return int(xs + 0.5), int(ys + 0.5)
@@ -237,13 +237,16 @@ class Transform:
         return x, y
 
 
-DEFAULT_CONFIG = {"fill": "",
-                  "outline": "black",
-                  "width": "1",
-                  "arrow": "none",
-                  "text": "",
-                  "justify": "center",
-                  "font": ("helvetica", 12, "normal")}
+DEFAULT_CONFIG = {
+    "fill": "",
+    "outline": "black",
+    "width": "1",
+    "arrow": "none",
+    "text": "",
+    "justify": "center",
+    "font": ("helvetica", 12, "normal")
+}
+
 
 
 class GraphicsObject:
@@ -252,8 +255,9 @@ class GraphicsObject:
         self.id = None
         config = {}
         for option in options:
-            config[option] = DEFAULT_CONFIG[option]
+            config[option] = DEFAULT_CONFIG.get(option, "")
         self.config = config
+
 
     def setFill(self, color):
         self._reconfig("fill", color)
@@ -267,10 +271,10 @@ class GraphicsObject:
     def draw(self, graphwin):
         try:
             if graphwin.isClosed():
-                return  # Do nothing if the window is closed
+                return
 
             if self.canvas and not self.canvas.isClosed():
-                return  # Do nothing if the object is already drawn
+                return
 
             self.canvas = graphwin
             self.id = self._draw(graphwin, self.config)
@@ -344,13 +348,14 @@ class Point(GraphicsObject):
         self.y = self.y + dy
 
     def clone(self):
-        other = Point(self.x, self.y)
-        other.config = self.config.copy()
-        return other
+        return Point(self.x, self.y)
 
-    def getX(self): return self.x
+    def getX(self):
+        return self.x
 
-    def getY(self): return self.y
+    def getY(self):
+        return self.y
+
 
 
 class _BBox(GraphicsObject):
@@ -501,7 +506,6 @@ class Polygon(GraphicsObject):
 
 
 class Text(GraphicsObject):
-
     def __init__(self, p, text):
         GraphicsObject.__init__(self, ["justify", "fill", "text", "font"])
         self.setText(text)
@@ -557,6 +561,7 @@ class Text(GraphicsObject):
 
     def setTextColor(self, color):
         self.setFill(color)
+
 
 
 class Entry(GraphicsObject):
