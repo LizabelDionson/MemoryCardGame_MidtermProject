@@ -44,7 +44,11 @@ def BackButtonClicked(point, button):
         return 20 < point.x < 120 and 20 < point.y < 60
     return False
 
-
+def DisplayDeveloperName(win):
+    developer_text = Text(Point(400, 240), "Developed by: Lizabel T. Dionson")
+    developer_text.setSize(12)
+    developer_text.setStyle('bold')
+    developer_text.draw(win)
 
 def Welcome(win):
     click_sound = pygame.mixer.Sound("sounds/click.wav")
@@ -62,6 +66,7 @@ def Welcome(win):
     txt1.draw(win)
 
     win.getMouse()
+    DisplayDeveloperName(win)
     play_click_sound(click_sound)
 
     logo.undraw()
